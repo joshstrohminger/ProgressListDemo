@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Background="LightGray"
         d:DataContext="{d:DesignInstance local:ItemViewModelDesignData, IsDesignTimeCreatable=True}"
-        Title="MainWindow" Height="550" Width="450">
+        Title="Progress List Demo" Height="550" Width="450">
     <DockPanel LastChildFill="True">
         <DockPanel LastChildFill="True" DockPanel.Dock="Top">
             <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center">
