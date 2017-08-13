@@ -6,13 +6,10 @@
         xmlns:local="clr-namespace:ProgressListDemo"
         mc:Ignorable="d"
         Background="LightGray"
+        d:DataContext="{d:DesignInstance local:ItemViewModelDesignData, IsDesignTimeCreatable=True}"
         Title="MainWindow" Height="650" Width="525">
-    <Window.DataContext>
-        <local:ItemViewModel/>
-    </Window.DataContext>
     <DockPanel LastChildFill="True">
         <DockPanel LastChildFill="True" DockPanel.Dock="Top">
-            <local:SpinningStatusIndicator DockPanel.Dock="Top" Size="70" Status="{Binding Status}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center">
                 <StackPanel.Resources>
                     <Style TargetType="Button">
@@ -27,44 +24,7 @@
                 <Button Content="Failed" Command="{Binding SetStatus}" CommandParameter="{x:Static local:ItemStatus.Failed}"/>
                 <Button Content="Demo" Command="{Binding RunDemo}"/>
             </StackPanel>
-            <Canvas Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Indicator">
-                <Ellipse Width="100" Height="100" x:Name="Circle" Fill="Black"/>
-                <Line X1="50" X2="50" Y1="10" Y2="90" StrokeThickness="10" Stroke="White"/>
-                <Line X1="10" X2="90" Y1="50" Y2="50" StrokeThickness="10" Stroke="White"/>
-                <Canvas.RenderTransform>
-                    <TransformGroup>
-                        <RotateTransform Angle="45" CenterX="50" CenterY="50" x:Name="Rotation"/>
-                        <ScaleTransform ScaleX="1" ScaleY="1" CenterX="50" CenterY="50" x:Name="Scale"/>
-                    </TransformGroup>
-                </Canvas.RenderTransform>
-                <Canvas.Resources>
-                    <Duration x:Key="ZoomDuration">0:0:0.25</Duration>
-                </Canvas.Resources>
-                <Canvas.Style>
-                    <Style TargetType="Canvas">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Status}" Value="{x:Static local:ItemStatus.Idle}">
-                                <DataTrigger.EnterActions>
-                                    <BeginStoryboard Name="ShrinkAnimation">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleX)" To="0"/>
-                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleY)" To="0"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.EnterActions>
-                                <DataTrigger.ExitActions>
-                                    <BeginStoryboard Name="GrowAnimation">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleX)" To="1"/>
-                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleY)" To="1"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.ExitActions>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Canvas.Style>
-            </Canvas>
+            <local:SpinningStatusIndicator DockPanel.Dock="Top" Size="70" Status="{Binding Status}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </DockPanel>
         <ItemsControl ItemsSource="{Binding Tasks}" HorizontalAlignment="Center">
             <ItemsControl.ItemTemplate>

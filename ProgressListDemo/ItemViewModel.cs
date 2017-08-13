@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProgressListDemo
 {
-    public class ItemViewModel : ObservableObject
+    public class ItemViewModel : ObservableObject, IItemViewModel
     {
         private ItemStatus _status;
-        private string _text;
-        private Random _random = new Random();
 
         public RelayCommand<ItemStatus> SetStatus { get; }
         public RelayCommand RunDemo { get; }
@@ -19,16 +18,6 @@ namespace ProgressListDemo
             set
             {
                 _status = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string Text
-        {
-            get => _text;
-            set
-            {
-                _text = value;
                 OnPropertyChanged();
             }
         }
@@ -59,31 +48,9 @@ namespace ProgressListDemo
                 {
                     item.Status = ItemStatus.Running;
                     await Task.Delay(2000);
-                    item.Status = _random.Next(2) == 1 ? ItemStatus.Done : ItemStatus.Failed;
+                    item.Status = item == Tasks.Last() ? ItemStatus.Failed : ItemStatus.Done;
                 }
             });
-        }
-    }
-
-    public class StartItem : ObservableObject
-    {
-        private ItemStatus _status;
-
-        public string Text { get; set; }
-
-        public ItemStatus Status
-        {
-            get => _status;
-            set
-            {
-                _status = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public StartItem(string text)
-        {
-            Text = text;
         }
     }
 }

@@ -53,14 +53,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="IItemViewModel.cs" />
     <Compile Include="ISpinningStatusIndicator.cs" />
     <Compile Include="ItemStatus.cs" />
     <Compile Include="ItemViewModel.cs" />
+    <Compile Include="ItemViewModelDesignData.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="SpinningStatusIndicator.xaml.cs">
       <DependentUpon>SpinningStatusIndicator.xaml</DependentUpon>
     </Compile>
     <Compile Include="SpinningStatusIndicatorDesignData.cs" />
+    <Compile Include="StartItem.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
