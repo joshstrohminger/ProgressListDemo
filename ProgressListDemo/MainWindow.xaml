@@ -5,61 +5,80 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProgressListDemo"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Background="LightGray"
+        Title="MainWindow" Height="650" Width="525">
     <Window.DataContext>
         <local:ItemViewModel/>
     </Window.DataContext>
     <DockPanel LastChildFill="True">
-        <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center">
-            <StackPanel.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Margin" Value="5"/>
-                    <Setter Property="Padding" Value="5"/>
-                </Style>
-            </StackPanel.Resources>
-            <Label Content="{Binding Status}" HorizontalAlignment="Center" FontWeight="Bold"/>
-            <Button Content="Idle" Command="{Binding SetStatus}" CommandParameter="{x:Static local:ItemStatus.Idle}"/>
-            <Button Content="Running" Command="{Binding SetStatus}" CommandParameter="{x:Static local:ItemStatus.Running}"/>
-            <Button Content="Done" Command="{Binding SetStatus}" CommandParameter="{x:Static local:ItemStatus.Done}"/>
-            <Button Content="Failed" Command="{Binding SetStatus}" CommandParameter="{x:Static local:ItemStatus.Failed}"/>
-        </StackPanel>
-        <Canvas Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Indicator">
-            <Ellipse Width="100" Height="100" x:Name="Circle" Fill="Black"/>
-            <Line X1="50" X2="50" Y1="10" Y2="90" StrokeThickness="10" Stroke="White"/>
-            <Line X1="10" X2="90" Y1="50" Y2="50" StrokeThickness="10" Stroke="White"/>
-            <Canvas.RenderTransform>
-                <TransformGroup>
-                    <RotateTransform Angle="45" CenterX="50" CenterY="50" x:Name="Rotation"/>
-                    <ScaleTransform ScaleX="1" ScaleY="1" CenterX="50" CenterY="50" x:Name="Scale"/>
-                </TransformGroup>
-            </Canvas.RenderTransform>
-            <Canvas.Resources>
-                <Duration x:Key="ZoomDuration">0:0:0.25</Duration>
-            </Canvas.Resources>
-            <Canvas.Style>
-                <Style TargetType="Canvas">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Status}" Value="{x:Static local:ItemStatus.Idle}">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard Name="ShrinkAnimation">
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleX)" To="0"/>
-                                        <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleY)" To="0"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                            <DataTrigger.ExitActions>
-                                <BeginStoryboard Name="GrowAnimation">
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleX)" To="1"/>
-                                        <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleY)" To="1"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.ExitActions>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Canvas.Style>
-        </Canvas>
+        <DockPanel LastChildFill="True" DockPanel.Dock="Top">
+            <local:SpinningStatusIndicator DockPanel.Dock="Top" Size="70" Status="{Binding Status}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center">
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="Padding" Value="5"/>
+                    </Style>
+                </StackPanel.Resources>
+                <Label Content="{Binding Status}" HorizontalAlignment="Center" FontWeight="Bold"/>
+                <Button Content="Idle" Command="{Binding SetStatus}" CommandParameter="{x:Static local:ItemStatus.Idle}"/>
+                <Button Content="Running" Command="{Binding SetStatus}" CommandParameter="{x:Static local:ItemStatus.Running}"/>
+                <Button Content="Done" Command="{Binding SetStatus}" CommandParameter="{x:Static local:ItemStatus.Done}"/>
+                <Button Content="Failed" Command="{Binding SetStatus}" CommandParameter="{x:Static local:ItemStatus.Failed}"/>
+                <Button Content="Demo" Command="{Binding RunDemo}"/>
+            </StackPanel>
+            <Canvas Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Indicator">
+                <Ellipse Width="100" Height="100" x:Name="Circle" Fill="Black"/>
+                <Line X1="50" X2="50" Y1="10" Y2="90" StrokeThickness="10" Stroke="White"/>
+                <Line X1="10" X2="90" Y1="50" Y2="50" StrokeThickness="10" Stroke="White"/>
+                <Canvas.RenderTransform>
+                    <TransformGroup>
+                        <RotateTransform Angle="45" CenterX="50" CenterY="50" x:Name="Rotation"/>
+                        <ScaleTransform ScaleX="1" ScaleY="1" CenterX="50" CenterY="50" x:Name="Scale"/>
+                    </TransformGroup>
+                </Canvas.RenderTransform>
+                <Canvas.Resources>
+                    <Duration x:Key="ZoomDuration">0:0:0.25</Duration>
+                </Canvas.Resources>
+                <Canvas.Style>
+                    <Style TargetType="Canvas">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Status}" Value="{x:Static local:ItemStatus.Idle}">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard Name="ShrinkAnimation">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleX)" To="0"/>
+                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleY)" To="0"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard Name="GrowAnimation">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleX)" To="1"/>
+                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleY)" To="1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Canvas.Style>
+            </Canvas>
+        </DockPanel>
+        <ItemsControl ItemsSource="{Binding Tasks}" HorizontalAlignment="Center">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" SharedSizeGroup="Text"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Indicator"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" FontWeight="Bold" FontSize="18" Text="{Binding Text}" TextAlignment="Right" VerticalAlignment="Center"/>
+                        <local:SpinningStatusIndicator Grid.Column="1" Size="45" Margin="5" Status="{Binding Status}"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </DockPanel>
 </Window>
