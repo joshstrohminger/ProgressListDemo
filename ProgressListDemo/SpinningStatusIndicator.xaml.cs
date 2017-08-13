@@ -54,47 +54,48 @@ namespace ProgressListDemo
 
         private void UpdateAnimations()
         {
-                var fromColor = ((SolidColorBrush)Circle.Fill).Color;
-                Color toColor;
-                var fromAngle = Rotation.Angle;
-                double toAngle;
-                RepeatBehavior repeat;
+            var fromColor = ((SolidColorBrush) Circle.Fill).Color;
+            Color toColor;
+            var fromAngle = Rotation.Angle;
+            double toAngle;
+            RepeatBehavior repeat;
 
-                switch (Status)
-                {
-                    case ItemStatus.Idle:
-                        toColor = Colors.White;
-                        toAngle = fromAngle + 90;
-                        repeat = RepeatBehavior.Forever;
-                        break;
-                    case ItemStatus.Running:
-                        toColor = Colors.DeepSkyBlue;
-                        toAngle = fromAngle + 90;
-                        repeat = RepeatBehavior.Forever;
-                        break;
-                    case ItemStatus.Done:
-                        toColor = Colors.Green;
-                        toAngle = Math.Ceiling(fromAngle / 90d) * 90;
-                        repeat = new RepeatBehavior(1);
-                        break;
-                    case ItemStatus.Failed:
-                        toColor = Colors.Red;
-                        toAngle = Math.Ceiling((fromAngle - 45) / 90d) * 90 + 45;
-                        repeat = new RepeatBehavior(1);
-                        break;
-                    default:
-                        return;
-                }
+            switch (Status)
+            {
+                case ItemStatus.Idle:
+                    toColor = Colors.White;
+                    toAngle = fromAngle + 90;
+                    repeat = RepeatBehavior.Forever;
+                    break;
+                case ItemStatus.Running:
+                    toColor = Colors.DeepSkyBlue;
+                    toAngle = fromAngle + 90;
+                    repeat = RepeatBehavior.Forever;
+                    break;
+                case ItemStatus.Done:
+                    toColor = Colors.Green;
+                    toAngle = Math.Ceiling(fromAngle / 90d) * 90;
+                    repeat = new RepeatBehavior(1);
+                    break;
+                case ItemStatus.Failed:
+                    toColor = Colors.Red;
+                    toAngle = Math.Ceiling((fromAngle - 45) / 90d) * 90 + 45;
+                    repeat = new RepeatBehavior(1);
+                    break;
+                default:
+                    return;
+            }
 
-                var rotationTime = new Duration(TimeSpan.FromSeconds(MaxAnimationTime * ((toAngle - fromAngle) / 90)));
+            var rotationTime = new Duration(TimeSpan.FromSeconds(MaxAnimationTime * ((toAngle - fromAngle) / 90)));
 
-                Circle.Fill = new SolidColorBrush(fromColor);
-                Circle.Fill.BeginAnimation(SolidColorBrush.ColorProperty, new ColorAnimation(fromColor, toColor, rotationTime),
-                    HandoffBehavior.SnapshotAndReplace);
+            Circle.Fill = new SolidColorBrush(fromColor);
+            Circle.Fill.BeginAnimation(SolidColorBrush.ColorProperty,
+                new ColorAnimation(fromColor, toColor, rotationTime),
+                HandoffBehavior.SnapshotAndReplace);
 
-                Rotation.BeginAnimation(RotateTransform.AngleProperty,
-                    new DoubleAnimation(fromAngle, toAngle, rotationTime, FillBehavior.HoldEnd) { RepeatBehavior = repeat },
-                    HandoffBehavior.SnapshotAndReplace);
+            Rotation.BeginAnimation(RotateTransform.AngleProperty,
+                new DoubleAnimation(fromAngle, toAngle, rotationTime, FillBehavior.HoldEnd) {RepeatBehavior = repeat},
+                HandoffBehavior.SnapshotAndReplace);
         }
 
         #endregion

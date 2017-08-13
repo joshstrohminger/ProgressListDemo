@@ -30,7 +30,7 @@ namespace ProgressListDemo
 
             Tasks = new List<StartItem>
             {
-                new StartItem("The first thing to do"),
+                new StartItem("The first thing to do", ItemStatus.Running),
                 new StartItem("Now we're doing the second thing"),
                 new StartItem("And here we are now"),
                 new StartItem("doing some more stuff"),
