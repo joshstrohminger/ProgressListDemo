@@ -12,7 +12,10 @@ namespace ProgressListDemo
     {
         #region Constants
 
-        private const double MaxAnimationTime = 0.5;
+        private const double MaxRotationSeconds = 0.3;
+        private static readonly Duration ZoomTime = new Duration(TimeSpan.FromSeconds(0.25));
+        private static readonly Duration ColorTime = new Duration(TimeSpan.FromSeconds(0.5));
+        private static readonly RepeatBehavior Once = new RepeatBehavior(1);
         
         #endregion
 
@@ -54,6 +57,11 @@ namespace ProgressListDemo
 
         private void UpdateAnimations()
         {
+            var fromOpacity = Indicator.Opacity;
+            double toOpacity = 1;
+            double fromScaleX = Scale.ScaleX;
+            double fromScaleY = Scale.ScaleY;
+            double toScale = 1;
             var fromColor = ((SolidColorBrush) Circle.Fill).Color;
             Color toColor;
             var fromAngle = Rotation.Angle;
@@ -63,7 +71,9 @@ namespace ProgressListDemo
             switch (Status)
             {
                 case ItemStatus.Idle:
-                    toColor = Colors.White;
+                    toScale = 0;
+                    toOpacity = 0;
+                    toColor = Colors.DeepSkyBlue;
                     toAngle = fromAngle + 90;
                     repeat = RepeatBehavior.Forever;
                     break;
@@ -75,22 +85,30 @@ namespace ProgressListDemo
                 case ItemStatus.Done:
                     toColor = Colors.Green;
                     toAngle = Math.Ceiling(fromAngle / 90d) * 90;
-                    repeat = new RepeatBehavior(1);
+                    repeat = Once;
                     break;
                 case ItemStatus.Failed:
                     toColor = Colors.Red;
                     toAngle = Math.Ceiling((fromAngle - 45) / 90d) * 90 + 45;
-                    repeat = new RepeatBehavior(1);
+                    repeat = Once;
                     break;
                 default:
                     return;
             }
 
-            var rotationTime = new Duration(TimeSpan.FromSeconds(MaxAnimationTime * ((toAngle - fromAngle) / 90)));
+            var rotationTime = new Duration(TimeSpan.FromSeconds(MaxRotationSeconds * ((toAngle - fromAngle) / 90)));
+      
+            IEasingFunction easing = Status == ItemStatus.Idle
+                ? null
+                : new BackEase {EasingMode = EasingMode.EaseOut, Amplitude = 0.5};
+            Scale.BeginAnimation(ScaleTransform.ScaleXProperty, new DoubleAnimation(fromScaleX, toScale, ZoomTime){ EasingFunction = easing }, HandoffBehavior.SnapshotAndReplace);
+            Scale.BeginAnimation(ScaleTransform.ScaleYProperty, new DoubleAnimation(fromScaleY, toScale, ZoomTime){ EasingFunction = easing }, HandoffBehavior.SnapshotAndReplace);
+
+            Indicator.BeginAnimation(OpacityProperty, new DoubleAnimation(fromOpacity, toOpacity, ZoomTime), HandoffBehavior.SnapshotAndReplace);
 
             Circle.Fill = new SolidColorBrush(fromColor);
             Circle.Fill.BeginAnimation(SolidColorBrush.ColorProperty,
-                new ColorAnimation(fromColor, toColor, rotationTime),
+                new ColorAnimation(fromColor, toColor, ColorTime),
                 HandoffBehavior.SnapshotAndReplace);
 
             Rotation.BeginAnimation(RotateTransform.AngleProperty,

@@ -9,7 +9,7 @@
           d:DataContext="{d:DesignInstance local:SpinningStatusIndicatorDesignData, IsDesignTimeCreatable=True}">
         <Viewbox Stretch="Uniform" Width="{Binding Size}" Height="{Binding Size}">
             <Canvas Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Indicator" Opacity="0">
-                <Ellipse Width="100" Height="100" x:Name="Circle" Fill="Black"/>
+                <Ellipse Width="100" Height="100" x:Name="Circle" Fill="Transparent"/>
                 <Line X1="50" X2="50" Y1="10" Y2="90" StrokeThickness="10" Stroke="White"/>
                 <Line X1="10" X2="90" Y1="50" Y2="50" StrokeThickness="10" Stroke="White"/>
                 <Canvas.RenderTransform>
@@ -18,36 +18,6 @@
                         <ScaleTransform ScaleX="0" ScaleY="0" CenterX="50" CenterY="50" x:Name="Scale"/>
                     </TransformGroup>
                 </Canvas.RenderTransform>
-                <Canvas.Resources>
-                    <Duration x:Key="ZoomDuration">0:0:0.25</Duration>
-                    <BackEase x:Key="ZoomEase" EasingMode="EaseOut" Amplitude="0.5"/>
-                </Canvas.Resources>
-                <Canvas.Style>
-                    <Style TargetType="Canvas">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Status}" Value="{x:Static local:ItemStatus.Idle}">
-                                <DataTrigger.EnterActions>
-                                    <BeginStoryboard Name="ShrinkAnimation">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="Opacity" To="0"/>
-                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleX)" To="0"/>
-                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleY)" To="0"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.EnterActions>
-                                <DataTrigger.ExitActions>
-                                    <BeginStoryboard Name="GrowAnimation">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" Storyboard.TargetProperty="Opacity" To="1"/>
-                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" EasingFunction="{StaticResource ZoomEase}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleX)" To="1"/>
-                                            <DoubleAnimation Duration="{StaticResource ZoomDuration}" EasingFunction="{StaticResource ZoomEase}" Storyboard.TargetProperty="RenderTransform.Children[1].(ScaleTransform.ScaleY)" To="1"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.ExitActions>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Canvas.Style>
             </Canvas>
             <Viewbox.Effect>
                 <DropShadowEffect BlurRadius="5" Opacity="0.7" ShadowDepth="5"/>

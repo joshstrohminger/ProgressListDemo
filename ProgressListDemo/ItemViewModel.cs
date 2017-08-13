@@ -8,6 +8,7 @@ namespace ProgressListDemo
     public class ItemViewModel : ObservableObject, IItemViewModel
     {
         private ItemStatus _status;
+        private Random _random = new Random();
 
         public RelayCommand<ItemStatus> SetStatus { get; }
         public RelayCommand RunDemo { get; }
@@ -30,7 +31,7 @@ namespace ProgressListDemo
 
             Tasks = new List<StartItem>
             {
-                new StartItem("The first thing to do", ItemStatus.Running),
+                new StartItem("The first thing to do"),
                 new StartItem("Now we're doing the second thing"),
                 new StartItem("And here we are now"),
                 new StartItem("doing some more stuff"),
@@ -47,7 +48,7 @@ namespace ProgressListDemo
                 foreach (var item in Tasks)
                 {
                     item.Status = ItemStatus.Running;
-                    await Task.Delay(2000);
+                    await Task.Delay(_random.Next(100, 2000));
                     item.Status = item == Tasks.Last() ? ItemStatus.Failed : ItemStatus.Done;
                 }
             });
