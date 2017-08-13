@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Background="LightGray"
         d:DataContext="{d:DesignInstance local:ItemViewModelDesignData, IsDesignTimeCreatable=True}"
-        Title="MainWindow" Height="650" Width="525">
+        Title="MainWindow" Height="550" Width="450">
     <DockPanel LastChildFill="True">
         <DockPanel LastChildFill="True" DockPanel.Dock="Top">
             <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center">
@@ -26,7 +26,7 @@
             </StackPanel>
             <local:SpinningStatusIndicator DockPanel.Dock="Top" Size="70" Status="{Binding Status}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </DockPanel>
-        <ItemsControl ItemsSource="{Binding Tasks}" HorizontalAlignment="Center">
+        <ItemsControl ItemsSource="{Binding Tasks}" HorizontalAlignment="Center" VerticalAlignment="Center">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid>
