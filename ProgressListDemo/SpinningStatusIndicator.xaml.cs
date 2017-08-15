@@ -16,12 +16,14 @@ namespace ProgressListDemo
         private static readonly Duration ZoomTime = new Duration(TimeSpan.FromSeconds(0.25));
         private static readonly Duration ColorTime = new Duration(TimeSpan.FromSeconds(0.5));
         private static readonly RepeatBehavior Once = new RepeatBehavior(1);
-        
-        #endregion
+        private static readonly IEasingFunction ZoomInEase =
+            new BackEase {EasingMode = EasingMode.EaseOut, Amplitude = 0.5};
 
-        #region Dependency Properties
+    #endregion
 
-        public static DependencyProperty StatusProperty = DependencyProperty.Register("Status", typeof(ItemStatus),
+    #region Dependency Properties
+
+    public static DependencyProperty StatusProperty = DependencyProperty.Register("Status", typeof(ItemStatus),
             typeof(SpinningStatusIndicator),
             new PropertyMetadata(ItemStatus.Idle, (o, args) => ((SpinningStatusIndicator) o).UpdateAnimations()));
 
@@ -57,10 +59,9 @@ namespace ProgressListDemo
 
         private void UpdateAnimations()
         {
-            var fromOpacity = Indicator.Opacity;
-            double toOpacity = 1;
-            double fromScaleX = Scale.ScaleX;
-            double fromScaleY = Scale.ScaleY;
+            var show = true;
+            var fromScaleX = Scale.ScaleX;
+            var fromScaleY = Scale.ScaleY;
             double toScale = 1;
             var fromColor = ((SolidColorBrush) Circle.Fill).Color;
             Color toColor;
@@ -72,10 +73,10 @@ namespace ProgressListDemo
             {
                 case ItemStatus.Idle:
                     toScale = 0;
-                    toOpacity = 0;
                     toColor = Colors.DeepSkyBlue;
                     toAngle = fromAngle + 90;
                     repeat = RepeatBehavior.Forever;
+                    show = false;
                     break;
                 case ItemStatus.Running:
                     toColor = Colors.DeepSkyBlue;
@@ -97,14 +98,21 @@ namespace ProgressListDemo
             }
 
             var rotationTime = new Duration(TimeSpan.FromSeconds(MaxRotationSeconds * ((toAngle - fromAngle) / 90)));
-      
-            IEasingFunction easing = Status == ItemStatus.Idle
-                ? null
-                : new BackEase {EasingMode = EasingMode.EaseOut, Amplitude = 0.5};
-            Scale.BeginAnimation(ScaleTransform.ScaleXProperty, new DoubleAnimation(fromScaleX, toScale, ZoomTime){ EasingFunction = easing }, HandoffBehavior.SnapshotAndReplace);
-            Scale.BeginAnimation(ScaleTransform.ScaleYProperty, new DoubleAnimation(fromScaleY, toScale, ZoomTime){ EasingFunction = easing }, HandoffBehavior.SnapshotAndReplace);
-
-            Indicator.BeginAnimation(OpacityProperty, new DoubleAnimation(fromOpacity, toOpacity, ZoomTime), HandoffBehavior.SnapshotAndReplace);
+            
+            var xAnim = new DoubleAnimation(fromScaleX, toScale, ZoomTime);
+            var yAnim = new DoubleAnimation(fromScaleY, toScale, ZoomTime);
+            if (show)
+            {
+                Indicator.Opacity = 1;
+                xAnim.EasingFunction = ZoomInEase;
+                yAnim.EasingFunction = ZoomInEase;
+            }
+            else
+            {
+                xAnim.Completed += (sender, args) => Indicator.Opacity = 0;
+            }
+            Scale.BeginAnimation(ScaleTransform.ScaleXProperty, xAnim, HandoffBehavior.SnapshotAndReplace);
+            Scale.BeginAnimation(ScaleTransform.ScaleYProperty, yAnim, HandoffBehavior.SnapshotAndReplace);
 
             Circle.Fill = new SolidColorBrush(fromColor);
             Circle.Fill.BeginAnimation(SolidColorBrush.ColorProperty,
